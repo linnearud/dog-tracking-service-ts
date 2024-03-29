@@ -9,43 +9,47 @@ export class ServicePermissionsBase {
     this.database = database;
   }
 
-  isAuthenticated({ context }: { context: RequestContext }) {
-    return Boolean(context.userId);
-  }
+  isAuthenticated = ({
+    context,
+  }: {
+    context: RequestContext;
+  }): Promise<boolean> => {
+    return new Promise((resolve) => resolve(Boolean(context.userId)));
+  };
 
-  isOriginalTrackOwner({
+  isOriginalTrackOwner = ({
     originalTrackId,
     userId,
   }: {
     originalTrackId: number;
     userId: string;
-  }) {
+  }): Promise<boolean> => {
     return this.database.originalTrackByIdAndUserExists({
       originalTrackId,
       userId,
     });
-  }
+  };
 
-  isDogTrackOwner({
+  isDogTrackOwner = ({
     dogTrackId,
     userId,
   }: {
     dogTrackId: number;
     userId: string;
-  }) {
+  }): Promise<boolean> => {
     return this.database.dogTrackByIdAndUserExists({
       dogTrackId,
       userId,
     });
-  }
+  };
 
-  async isDogTrackEditor({
+  isDogTrackEditor = async ({
     dogTrackId,
     userId,
   }: {
     dogTrackId: number;
     userId: string;
-  }) {
+  }) => {
     const dog = await this.database.getDockTrackDog({
       dogTrackId,
     });
@@ -55,23 +59,29 @@ export class ServicePermissionsBase {
     }
 
     return this.isDogEditor({ dogId: dog.id, userId });
-  }
+  };
 
-  async isDogEditor({ dogId, userId }: { dogId: number; userId: string }) {
+  isDogEditor = async ({
+    dogId,
+    userId,
+  }: {
+    dogId: number;
+    userId: string;
+  }) => {
     const accessRole = await this.database.getDogAccess({
       dogId: dogId,
       userId: userId,
     });
 
     return Boolean(accessRole);
-  }
+  };
 
-  async isDogOwner({ dogId, userId }: { dogId: number; userId: string }) {
+  isDogOwner = async ({ dogId, userId }: { dogId: number; userId: string }) => {
     const accessRole = await this.database.getDogAccess({
       dogId: dogId,
       userId: userId,
     });
 
     return accessRole === "OWNER";
-  }
+  };
 }

@@ -10,76 +10,84 @@ export class OriginalTrackServicePermissions extends ServicePermissionsBase {
     super({ database });
   }
 
-  async listOriginalTracks({ context }: { context: RequestContext }) {
+  listOriginalTracks = ({
+    context,
+  }: {
+    context: RequestContext;
+  }): Promise<boolean> => {
     return this.isAuthenticated({ context });
-  }
+  };
 
-  async createOriginalTrack({ context }: { context: RequestContext }) {
+  createOriginalTrack = ({
+    context,
+  }: {
+    context: RequestContext;
+  }): Promise<boolean> => {
     return this.isAuthenticated({ context });
-  }
+  };
 
-  async addOriginalTrackCoordinates({
+  addOriginalTrackCoordinates = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.addOriginalTrackCoordinates>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isOriginalTrackOwner({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async completeOriginalTrack({
+  completeOriginalTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.completeOriginalTrack>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isOriginalTrackOwner({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async deleteOriginalTrack({
+  deleteOriginalTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.deleteOriginalTrack>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isOriginalTrackOwner({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async getOriginalTrackCoordinates({
+  getOriginalTrackCoordinates = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.getOriginalTrackCoordinates>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isOriginalTrackOwner({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async listDogTracks({
+  listDogTracks = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.listDogTracks>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isOriginalTrackOwner({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 }

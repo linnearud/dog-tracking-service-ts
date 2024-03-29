@@ -11,41 +11,41 @@ export class DogServicePermissions extends ServicePermissionsBase {
     super({ database });
   }
 
-  async listDogs({ context }: { context: RequestContext }) {
+  listDogs = ({ context }: { context: RequestContext }): Promise<boolean> => {
     return this.isAuthenticated({ context });
-  }
+  };
 
-  async createDog({ context }: { context: RequestContext }) {
+  createDog = ({ context }: { context: RequestContext }): Promise<boolean> => {
     return this.isAuthenticated({ context });
-  }
+  };
 
-  async updateDog({
+  updateDog = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.updateDogSchema>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogEditor({ dogId: data.dogId, userId: context.userId });
-  }
+  };
 
-  async deleteDog({
+  deleteDog = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.updateDogSchema>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogOwner({ dogId: data.dogId, userId: context.userId });
-  }
+  };
 
-  async listDogTracks({
+  listDogTracks = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.listDogTracksSchema>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogEditor({ dogId: data.dogId, userId: context.userId });
-  }
+  };
 }

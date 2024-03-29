@@ -13,29 +13,29 @@ export class DogTrackService {
     this.database = database;
   }
 
-  async createDogTrack({
+  createDogTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.createDogTrack>;
     context: RequestContext;
-  }): Promise<DogTrack> {
+  }): Promise<DogTrack> => {
     return this.database.createDogTrack({
       startLat: data.startLatitude,
       startLong: data.startLongitude,
       userId: context.userId,
       originalTrackId: data.originalTrackId,
-      dogId: data.dogId
+      dogId: data.dogId,
     });
-  }
+  };
 
-  async addDogTrackCoordinates({
+  addDogTrackCoordinates = async ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.addDogTrackCoordinates>;
     context: RequestContext;
-  }): Promise<Coordinate[]> {
+  }): Promise<Coordinate[]> => {
     const dogTrack = await this.database.getDogTrackById({
       id: data.dogTrackId,
     });
@@ -56,15 +56,15 @@ export class DogTrackService {
         createdAt: c.timestamp,
       })),
     });
-  }
+  };
 
-  async completeDogTrack({
+  completeDogTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.completeDogTrack>;
     context: RequestContext;
-  }): Promise<DogTrack> {
+  }): Promise<DogTrack> => {
     const distance = 100; // calculate distance
 
     return this.database.updateDogTrack({
@@ -72,35 +72,35 @@ export class DogTrackService {
       endedAt: new Date(),
       distance,
     });
-  }
+  };
 
-  async deleteDogTrack({
+  deleteDogTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.deleteDogTrack>;
     context: RequestContext;
-  }): Promise<number> {
+  }): Promise<number> => {
     return this.database.deleteDogTrack({
       dogTrackId: data.dogTrackId,
     });
-  }
+  };
 
-  // async getOriginalTrackCoordinates({
-  //   data,
-  //   context,
-  // }: {
-  //   data: z.infer<typeof schema.getOriginalTrackCoordinates>;
-  //   context: RequestContext;
-  // }): Promise<Coordinate[]> {
-  //   const coordinates = await this.database.getOriginalTrackCoordinates({
-  //     originalTrackId: data.originalTrackId,
-  //   });
+  getDockTrackCoordinates = async ({
+    data,
+    context,
+  }: {
+    data: z.infer<typeof schema.getDogTrackCoordinates>;
+    context: RequestContext;
+  }): Promise<Coordinate[]> => {
+    // const coordinates = await this.database.getDogTrackCoordinates({
+    //   dogTrackId: data.dogTrackId,
+    // });
 
-  //   if (!coordinates) {
-  //     throw new NotFoundError("Original track not found");
-  //   }
+    // if (!coordinates) {
+    //   throw new NotFoundError("Original track not found");
+    // }
 
-  //   return coordinates;
-  // }
+    return [];
+  };
 }

@@ -10,13 +10,13 @@ export class DogTrackServicePermissions extends ServicePermissionsBase {
     super({ database });
   }
 
-  async createDogTrack({
+  createDogTrack = async ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.createDogTrack>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     const isDogEditor = await this.isDogEditor({
       dogId: data.dogId,
       userId: context.userId,
@@ -26,57 +26,57 @@ export class DogTrackServicePermissions extends ServicePermissionsBase {
       userId: context.userId,
     });
     return isDogEditor && isOriginalTrackOwner;
-  }
+  };
 
-  async addDogTrackCoordinates({
+  addDogTrackCoordinates = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.addDogTrackCoordinates>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogTrackOwner({
       dogTrackId: data.dogTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async completeDogTrack({
+  completeDogTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.completeDogTrack>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogTrackOwner({
       dogTrackId: data.dogTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async deleteDogTrack({
+  deleteDogTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.deleteDogTrack>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogTrackOwner({
       dogTrackId: data.dogTrackId,
       userId: context.userId,
     });
-  }
+  };
 
-  async getDogTrackCoordinates({
+  getDogTrackCoordinates = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.getDogTrackCoordinates>;
     context: RequestContext;
-  }) {
+  }): Promise<boolean> => {
     return this.isDogTrackEditor({
       dogTrackId: data.dogTrackId,
       userId: context.userId,
     });
-  }
+  };
 }

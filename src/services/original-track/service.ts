@@ -13,21 +13,21 @@ export class OriginalTrackService {
     this.database = database;
   }
 
-  async listOriginalTracks({
+  listOriginalTracks = ({
     context,
   }: {
     context: RequestContext;
-  }): Promise<OriginalTrack[]> {
+  }): Promise<OriginalTrack[]> => {
     return this.database.listOriginalTracksByUser({ userId: context.userId });
-  }
+  };
 
-  async createOriginalTrack({
+  createOriginalTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.createOriginalTrack>;
     context: RequestContext;
-  }): Promise<OriginalTrack> {
+  }): Promise<OriginalTrack> => {
     return this.database.createOriginalTrack({
       startLat: data.startLatitude,
       startLong: data.startLongitude,
@@ -35,15 +35,15 @@ export class OriginalTrackService {
       accessRole: "OWNER",
       userId: context.userId,
     });
-  }
+  };
 
-  async addOriginalTrackCoordinates({
+  addOriginalTrackCoordinates = async ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.addOriginalTrackCoordinates>;
     context: RequestContext;
-  }): Promise<Coordinate[]> {
+  }): Promise<Coordinate[]> => {
     const originalTrack = await this.database.getOriginalTrackById({
       id: data.originalTrackId,
     });
@@ -65,15 +65,15 @@ export class OriginalTrackService {
         createdAt: c.timestamp,
       })),
     });
-  }
+  };
 
-  async completeOriginalTrack({
+  completeOriginalTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.completeOriginalTrack>;
     context: RequestContext;
-  }): Promise<OriginalTrack> {
+  }): Promise<OriginalTrack> => {
     const distance = 100; // calculate distance
 
     return this.database.updateOriginalTrack({
@@ -81,27 +81,27 @@ export class OriginalTrackService {
       endedAt: new Date(),
       distance,
     });
-  }
+  };
 
-  async deleteOriginalTrack({
+  deleteOriginalTrack = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.completeOriginalTrack>;
     context: RequestContext;
-  }): Promise<number> {
+  }): Promise<number> => {
     return this.database.deleteOriginalTrack({
       originalTrackId: data.originalTrackId,
     });
-  }
+  };
 
-  async getOriginalTrackCoordinates({
+  getOriginalTrackCoordinates = async ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.getOriginalTrackCoordinates>;
     context: RequestContext;
-  }): Promise<Coordinate[]> {
+  }): Promise<Coordinate[]> => {
     const coordinates = await this.database.getOriginalTrackCoordinates({
       originalTrackId: data.originalTrackId,
     });
@@ -111,18 +111,18 @@ export class OriginalTrackService {
     }
 
     return coordinates;
-  }
+  };
 
-  async listDogTracks({
+  listDogTracks = ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.listDogTracks>;
     context: RequestContext;
-  }): Promise<DogTrack[]> {
+  }): Promise<DogTrack[]> => {
     return this.database.listDogTracksByOriginalTrackIdAndUserId({
       originalTrackId: data.originalTrackId,
       userId: context.userId,
     });
-  }
+  };
 }
