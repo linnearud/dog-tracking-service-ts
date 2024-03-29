@@ -1,6 +1,6 @@
 import { RequestContext } from "../../api/request";
 import { Database } from "../../data/database";
-import { OriginalTrack, Coordinate, DogTrack } from "../../data/entities";
+import { OriginalTrack, Coordinate, DogTrack, DogTrackCoordinates } from "../../data/entities";
 import { NotFoundError, BadRequestError } from "../../utils/errors";
 import { z } from "zod";
 
@@ -86,21 +86,21 @@ export class DogTrackService {
     });
   };
 
-  getDockTrackCoordinates = async ({
+  getDogTrackCoordinates = async ({
     data,
     context,
   }: {
     data: z.infer<typeof schema.getDogTrackCoordinates>;
     context: RequestContext;
-  }): Promise<Coordinate[]> => {
-    // const coordinates = await this.database.getDogTrackCoordinates({
-    //   dogTrackId: data.dogTrackId,
-    // });
+  }): Promise<DogTrackCoordinates> => {
+    const coordinates = await this.database.getDogTrackCoordinates({
+      dogTrackId: data.dogTrackId,
+    });
 
-    // if (!coordinates) {
-    //   throw new NotFoundError("Original track not found");
-    // }
+    if (!coordinates) {
+      throw new NotFoundError("Original track not found");
+    }
 
-    return [];
+    return coordinates;
   };
 }

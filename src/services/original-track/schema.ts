@@ -10,29 +10,29 @@ export const createOriginalTrack = z.object({
 });
 
 export const addOriginalTrackCoordinates = z.object({
-  originalTrackId: z.number(),
+  originalTrackId: z.coerce.number(),
   coordinates: z.array(
     z.object({
       latitude: z.number(),
       longitude: z.number(),
       type: z.enum(["HOOF", "BLOOD_AND_HOOF"]),
-      timestamp: z.date(),
+      timestamp: z.coerce.date(),
     }),
   ),
 });
 
 export const completeOriginalTrack = z.object({
-  originalTrackId: z.number(),
+  originalTrackId: z.coerce.number(),
 });
 
 export const deleteOriginalTrack = z.object({
-  originalTrackId: z.number(),
+  originalTrackId: z.coerce.number(),
 });
 
 export const getOriginalTrackCoordinates = z.object({
-  originalTrackId: z.number(),
+  originalTrackId: z.coerce.number(),
 });
 
 export const listDogTracks = z.object({
-  originalTrackId: z.number(),
+  originalTrackId: z.coerce.number(),
 });

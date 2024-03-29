@@ -41,16 +41,16 @@ export class DogTrackRouter {
         res,
       }),
     );
-    // this._router.get("/:dogTrackId/coordinates", async (req, res) =>
-    //   handleRequest({
-    //     inputSchema: schemas.getDogTrackCoordinates,
-    //     requestHandler: this._dogTrackService.getDogTrackCoordinates,
-    //     permissionHandler:
-    //       this._dogTrackPermissions.getDogTrackCoordinates,
-    //     req,
-    //     res,
-    //   }),
-    // );
+    this._router.get("/:dogTrackId/coordinates", async (req, res) =>
+      handleRequest({
+        inputSchema: schemas.getDogTrackCoordinates,
+        requestHandler: this._dogTrackService.getDogTrackCoordinates,
+        permissionHandler:
+          this._dogTrackPermissions.getDogTrackCoordinates,
+        req,
+        res,
+      }),
+    );
     this._router.put("/:dogTrackId/complete", async (req, res) =>
       handleRequest({
         inputSchema: schemas.completeDogTrack,

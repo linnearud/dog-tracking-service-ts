@@ -10,6 +10,8 @@ import { DogTrackServicePermissions } from "./services/dog-track/permissions";
 import { DogRouter } from "./api/dog";
 import { OriginalTrackRouter } from "./api/original-track";
 import { DogTrackRouter } from "./api/dog-track";
+import { auth } from "express-oauth2-jwt-bearer";
+
 import { Database } from "./data/database";
 
 const prisma = new PrismaClient();
@@ -41,6 +43,13 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(
+  auth({
+    issuerBaseURL: "https://devpack.eu.auth0.com/",
+    audience: "dts-localhost",
+  }),
+);
+
 const port = process.env.PORT;
 
 app.use("/dogs", dogRouter.router);

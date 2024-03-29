@@ -32,6 +32,8 @@ export const handleRequest = async <T extends AnyZodObject>({
     inputSchema.parseAsync({ ...req.params, ...req.body }),
   );
 
+  console.log(req.body)
+
   if (validationError) {
     return res
       .status(400)
@@ -51,7 +53,11 @@ export const handleRequest = async <T extends AnyZodObject>({
     },
   });
 
-  const context = { logger, userId: "userId" };
+  if (!req.auth?.payload?.sub) {
+    return res.status(401).send("Missing or invalid authorization header");
+  }
+
+  const context = { logger, userId: req.auth.payload.sub };
 
   const [isAllowedToPerformAction] = await safeAsync(
     permissionHandler({ data: parsedRequestParameters, context }),

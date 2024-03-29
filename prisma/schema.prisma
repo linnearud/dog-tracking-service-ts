@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model UserProfile {
-  id        Int               @id @default(autoincrement())
-  userId    String            @unique @db.Uuid
-  dogAccess UserAccessOnDog[]
-
-  originalTracks OriginalTrack[]
-  dogTracks       DogTrack[]
-}
-
 enum BucketHost {
   SUPABASE
 }
@@ -62,9 +53,8 @@ enum UserDogAccessRole {
 
 model UserAccessOnDog {
   accessRole UserDogAccessRole
-  userId     String            @db.Uuid
+  userId     String
   dogId      Int
-  user       UserProfile       @relation(fields: [userId], references: [userId])
   dog        Dog               @relation(fields: [dogId], references: [id], onDelete: Cascade)
 
   @@id([userId, dogId])
@@ -105,11 +95,10 @@ model Coordinate {
 
 // Original track
 model OriginalTrack {
-  id              Int         @id @default(autoincrement())
-  createdByUserId String      @db.Uuid
-  createdByUser   UserProfile @relation(fields: [createdByUserId], references: [userId], onDelete: Cascade)
+  id              Int        @id @default(autoincrement())
+  createdByUserId String
   trackId         Int
-  track           Track       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  track           Track      @relation(fields: [trackId], references: [id], onDelete: Cascade)
   dogTracks       DogTrack[]
 }
 
@@ -122,6 +111,5 @@ model DogTrack {
   originalTrack   OriginalTrack @relation(fields: [originalTrackId], references: [id], onDelete: Cascade)
   dogId           Int
   dog             Dog           @relation(fields: [dogId], references: [id], onDelete: Cascade)
-  createdByUserId String        @db.Uuid
-  createdByUser   UserProfile   @relation(fields: [createdByUserId], references: [userId], onDelete: Cascade)
+  createdByUserId String
 }

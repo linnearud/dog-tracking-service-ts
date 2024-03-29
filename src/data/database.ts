@@ -1,5 +1,11 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { Dog, DogTrack, OriginalTrack, Coordinate } from "./entities";
+import {
+  Dog,
+  DogTrack,
+  OriginalTrack,
+  Coordinate,
+  DogTrackCoordinates,
+} from "./entities";
 import { mapDbTrackToTrackInfo, mapDbDogTrackToDogTrack } from "./mappers";
 
 export class Database {
@@ -161,22 +167,18 @@ export class Database {
     accessRole: "OWNER" | "EDITOR";
     userId: string;
   }): Promise<OriginalTrack> {
-    const dbTrack = await this.prismaClient.$transaction(async (tx) => {
-      const track = await tx.track.create({
-        data: {
-          coordinates: {
-            create: [{ lat: startLat, long: startLong, type: startType }],
+    const dbTrack = await this.prismaClient.originalTrack.create({
+      data: {
+        createdByUserId: userId,
+        track: {
+          create: {
+            coordinates: {
+              create: [{ lat: startLat, long: startLong, type: startType }],
+            },
           },
         },
-      });
-
-      return this.prismaClient.originalTrack.create({
-        data: {
-          createdByUserId: userId,
-          trackId: track.id,
-        },
-        include: { track: true },
-      });
+      },
+      include: { track: true },
     });
 
     return {
@@ -506,9 +508,40 @@ export class Database {
       where: {
         id: originalTrackId,
       },
-      include: { track: { include: { coordinates: true } } },
+      include: {
+        track: { include: { coordinates: { orderBy: { createdAt: "asc" } } } },
+      },
     });
 
     return dbTrack?.track.coordinates;
+  }
+
+  async getDogTrackCoordinates({
+    dogTrackId,
+  }: {
+    dogTrackId: number;
+  }): Promise<DogTrackCoordinates | undefined> {
+    const dbTrack = await this.prismaClient.dogTrack.findUnique({
+      where: {
+        id: dogTrackId,
+      },
+      include: {
+        track: { include: { coordinates: true } },
+        originalTrack: {
+          include: {
+            track: {
+              include: { coordinates: { orderBy: { createdAt: "asc" } } },
+            },
+          },
+        },
+      },
+    });
+
+    return dbTrack
+      ? {
+          dog: dbTrack.track.coordinates,
+          original: dbTrack.originalTrack.track.coordinates,
+        }
+      : undefined;
   }
 }

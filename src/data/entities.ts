@@ -26,4 +26,9 @@ export type DogTrack = TrackInfo & {
   dog: Dog;
 };
 
+export type DogTrackCoordinates = {
+  dog: Coordinate[]
+  original: Coordinate[]
+}
+
 export type OriginalTrack = TrackInfo & { id: number };
