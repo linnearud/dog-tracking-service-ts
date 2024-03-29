@@ -1,6 +1,6 @@
 import { safeAsync } from "../utils/safeAsync";
 import { AnyZodObject, z } from "zod";
-import { Logger } from "../infra/logger";
+import { Logger } from "../utils/logger";
 import { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
 
