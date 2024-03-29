@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Router } from "express";
-import { handleRequest } from "./request";
-import { OriginalTrackService } from "../services/original-track/service";
-import { OriginalTrackServicePermissions } from "../services/original-track/permissions";
-import * as schemas from "../services/original-track/schema";
+import { handleRequest } from "../request";
+import { OriginalTrackService } from "../../services/original-track/service";
+import { OriginalTrackServicePermissions } from "../../services/original-track/permissions";
+import * as schemas from "../../services/original-track/schema";
 
 export class OriginalTrackRouter {
   private _originalTrackService: OriginalTrackService;

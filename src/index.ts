@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { auth } from "express-oauth2-jwt-bearer";
 
-import { DogRouter } from "./api/dog";
-import { OriginalTrackRouter } from "./api/original-track";
-import { DogTrackRouter } from "./api/dog-track";
+import { DogRouter } from "./api/dog/router";
+import { OriginalTrackRouter } from "./api/original-track/router";
+import { DogTrackRouter } from "./api/dog-track/router";
 
 import { DogService } from "./services/dog/service";
 import { DogServicePermissions } from "./services/dog/permissions";
@@ -15,6 +15,8 @@ import { DogTrackService } from "./services/dog-track/service";
 import { DogTrackServicePermissions } from "./services/dog-track/permissions";
 
 import { Database } from "./data/database";
+
+const port = process.env.PORT;
 
 const prisma = new PrismaClient();
 const database = new Database({ prismaClient: prisma });
@@ -44,6 +46,7 @@ const dogTrackRouter = new DogTrackRouter({
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
 app.use(
   auth({
@@ -51,8 +54,6 @@ app.use(
     audience: "dts-localhost",
   }),
 );
-
-const port = process.env.PORT;
 
 app.use("/dogs", dogRouter.router);
 app.use("/original-tracks", originalTrackRouter.router);

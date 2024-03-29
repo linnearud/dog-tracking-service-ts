@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Router } from "express";
-import { handleRequest } from "./request";
-import { DogTrackService } from "../services/dog-track/service";
-import { DogTrackServicePermissions } from "../services/dog-track/permissions";
-import * as schemas from "../services/dog-track/schema";
+import { handleRequest } from "../request";
+import { DogTrackService } from "../../services/dog-track/service";
+import { DogTrackServicePermissions } from "../../services/dog-track/permissions";
+import * as schemas from "../../services/dog-track/schema";
 
 export class DogTrackRouter {
   private _dogTrackService: DogTrackService;
@@ -45,8 +45,7 @@ export class DogTrackRouter {
       handleRequest({
         inputSchema: schemas.getDogTrackCoordinates,
         requestHandler: this._dogTrackService.getDogTrackCoordinates,
-        permissionHandler:
-          this._dogTrackPermissions.getDogTrackCoordinates,
+        permissionHandler: this._dogTrackPermissions.getDogTrackCoordinates,
         req,
         res,
       }),

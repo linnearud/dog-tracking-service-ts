@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { Router } from "express";
-import { handleRequest } from "./request";
-import { DogService } from "../services/dog/service";
-import { DogServicePermissions } from "../services/dog/permissions";
-import * as schemas from "../services/dog/schema";
+import { handleRequest } from "../request";
+import { DogService } from "../../services/dog/service";
+import { DogServicePermissions } from "../../services/dog/permissions";
+import * as schemas from "../../services/dog/schema";
 
 export class DogRouter {
   private _dogService: DogService;
