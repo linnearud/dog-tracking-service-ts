@@ -1,16 +1,18 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import { auth } from "express-oauth2-jwt-bearer";
+
+import { DogRouter } from "./api/dog";
+import { OriginalTrackRouter } from "./api/original-track";
+import { DogTrackRouter } from "./api/dog-track";
+
 import { DogService } from "./services/dog/service";
 import { DogServicePermissions } from "./services/dog/permissions";
 import { OriginalTrackService } from "./services/original-track/service";
 import { OriginalTrackServicePermissions } from "./services/original-track/permissions";
 import { DogTrackService } from "./services/dog-track/service";
 import { DogTrackServicePermissions } from "./services/dog-track/permissions";
-import { DogRouter } from "./api/dog";
-import { OriginalTrackRouter } from "./api/original-track";
-import { DogTrackRouter } from "./api/dog-track";
-import { auth } from "express-oauth2-jwt-bearer";
 
 import { Database } from "./data/database";
 

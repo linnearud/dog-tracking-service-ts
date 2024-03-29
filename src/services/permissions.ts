@@ -24,7 +24,7 @@ export class ServicePermissionsBase {
     originalTrackId: number;
     userId: string;
   }): Promise<boolean> => {
-    return this.database.originalTrackByIdAndUserExists({
+    return this.database.originalTrack.originalTrackByIdAndUserExists({
       originalTrackId,
       userId,
     });
@@ -37,7 +37,7 @@ export class ServicePermissionsBase {
     dogTrackId: number;
     userId: string;
   }): Promise<boolean> => {
-    return this.database.dogTrackByIdAndUserExists({
+    return this.database.dogTrack.dogTrackByIdAndUserExists({
       dogTrackId,
       userId,
     });
@@ -50,7 +50,7 @@ export class ServicePermissionsBase {
     dogTrackId: number;
     userId: string;
   }) => {
-    const dog = await this.database.getDockTrackDog({
+    const dog = await this.database.dogTrack.getDockTrackDog({
       dogTrackId,
     });
 
@@ -68,7 +68,7 @@ export class ServicePermissionsBase {
     dogId: number;
     userId: string;
   }) => {
-    const accessRole = await this.database.getDogAccess({
+    const accessRole = await this.database.dog.getDogAccess({
       dogId: dogId,
       userId: userId,
     });
@@ -77,7 +77,7 @@ export class ServicePermissionsBase {
   };
 
   isDogOwner = async ({ dogId, userId }: { dogId: number; userId: string }) => {
-    const accessRole = await this.database.getDogAccess({
+    const accessRole = await this.database.dog.getDogAccess({
       dogId: dogId,
       userId: userId,
     });

@@ -1,6 +1,11 @@
 import { RequestContext } from "../../api/request";
 import { Database } from "../../data/database";
-import { OriginalTrack, Coordinate, DogTrack, DogTrackCoordinates } from "../../data/entities";
+import {
+  OriginalTrack,
+  Coordinate,
+  DogTrack,
+  DogTrackCoordinates,
+} from "../../data/entities";
 import { NotFoundError, BadRequestError } from "../../utils/errors";
 import { z } from "zod";
 
@@ -20,7 +25,7 @@ export class DogTrackService {
     data: z.infer<typeof schema.createDogTrack>;
     context: RequestContext;
   }): Promise<DogTrack> => {
-    return this.database.createDogTrack({
+    return this.database.dogTrack.createDogTrack({
       startLat: data.startLatitude,
       startLong: data.startLongitude,
       userId: context.userId,
@@ -36,7 +41,7 @@ export class DogTrackService {
     data: z.infer<typeof schema.addDogTrackCoordinates>;
     context: RequestContext;
   }): Promise<Coordinate[]> => {
-    const dogTrack = await this.database.getDogTrackById({
+    const dogTrack = await this.database.dogTrack.getDogTrackById({
       id: data.dogTrackId,
     });
 
@@ -48,7 +53,7 @@ export class DogTrackService {
       throw new BadRequestError("Cannot add coordinates for ended track");
     }
 
-    return this.database.createDogTrackCoordinates({
+    return this.database.dogTrack.createDogTrackCoordinates({
       dogTrackId: data.dogTrackId,
       coordinates: data.coordinates.map((c) => ({
         lat: c.latitude,
@@ -67,7 +72,7 @@ export class DogTrackService {
   }): Promise<DogTrack> => {
     const distance = 100; // calculate distance
 
-    return this.database.updateDogTrack({
+    return this.database.dogTrack.updateDogTrack({
       dogTrackId: data.dogTrackId,
       endedAt: new Date(),
       distance,
@@ -81,7 +86,7 @@ export class DogTrackService {
     data: z.infer<typeof schema.deleteDogTrack>;
     context: RequestContext;
   }): Promise<number> => {
-    return this.database.deleteDogTrack({
+    return this.database.dogTrack.deleteDogTrack({
       dogTrackId: data.dogTrackId,
     });
   };
@@ -93,7 +98,7 @@ export class DogTrackService {
     data: z.infer<typeof schema.getDogTrackCoordinates>;
     context: RequestContext;
   }): Promise<DogTrackCoordinates> => {
-    const coordinates = await this.database.getDogTrackCoordinates({
+    const coordinates = await this.database.dogTrack.getDogTrackCoordinates({
       dogTrackId: data.dogTrackId,
     });
 

@@ -13,7 +13,7 @@ export class DogService {
   }
 
   listDogs = ({ context }: { context: RequestContext }): Promise<Dog[]> => {
-    return this.database.listDogsByUser({ userId: context.userId });
+    return this.database.dog.listDogsByUser({ userId: context.userId });
   };
 
   createDog = ({
@@ -23,7 +23,7 @@ export class DogService {
     data: z.infer<typeof schema.createDogSchema>;
     context: RequestContext;
   }): Promise<Dog> => {
-    return this.database.createDog({
+    return this.database.dog.createDog({
       name: data.name,
       userId: context.userId,
       accessRole: "OWNER",
@@ -37,7 +37,7 @@ export class DogService {
     data: z.infer<typeof schema.updateDogSchema>;
     context: RequestContext;
   }): Promise<Dog> => {
-    return this.database.updateDog({
+    return this.database.dog.updateDog({
       name: data.name,
       breed: data.breed,
       dogId: data.dogId,
@@ -51,7 +51,7 @@ export class DogService {
     data: z.infer<typeof schema.updateDogSchema>;
     context: RequestContext;
   }): Promise<number> => {
-    return this.database.deleteDog({
+    return this.database.dog.deleteDog({
       dogId: data.dogId,
     });
   };
@@ -63,6 +63,6 @@ export class DogService {
     data: z.infer<typeof schema.listDogTracksSchema>;
     context: RequestContext;
   }): Promise<DogTrack[]> => {
-    return this.database.listDogTracksByDogId({ dogId: data.dogId });
+    return this.database.dog.listDogTracksByDogId({ dogId: data.dogId });
   };
 }
