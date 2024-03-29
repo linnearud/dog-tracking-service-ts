@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserProfile {
+  id        Int               @id @default(autoincrement())
+  userId    String            @unique @db.Uuid
+  dogAccess UserAccessOnDog[]
+
+  originalTracks OriginalTrack[]
+  dogTracks       DogTrack[]
+}
+
+enum BucketHost {
+  SUPABASE
+}
+
+enum BucketAssetType {
+  IMAGE
+}
+
+model BucketAsset {
+  id        Int             @id @default(autoincrement())
+  createdAt DateTime        @default(now())
+  type      BucketAssetType @default(IMAGE)
+  host      BucketHost      @default(SUPABASE)
+  bucket    String          @db.VarChar(255)
+  path      String          @db.VarChar(255)
+
+  prismaDogs BucketAssetOnDog[]
+}
+
+model BucketAssetOnDog {
+  bucketAssetId Int
+  dogId         Int
+  bucketAsset   BucketAsset @relation(fields: [bucketAssetId], references: [id], onDelete: Cascade)
+  dog           Dog         @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@id([bucketAssetId, dogId])
+}
+
+model Dog {
+  id         Int                @id @default(autoincrement())
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  breed      String?            @db.VarChar(255)
+  name       String             @db.VarChar(255)
+  assets     BucketAssetOnDog[]
+  userAccess UserAccessOnDog[]
+  dogTracks  DogTrack[]
+}
+
+enum UserDogAccessRole {
+  OWNER
+  EDITOR
+}
+
+model UserAccessOnDog {
+  accessRole UserDogAccessRole
+  userId     String            @db.Uuid
+  dogId      Int
+  user       UserProfile       @relation(fields: [userId], references: [userId])
+  dog        Dog               @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@id([userId, dogId])
+}
+
+/// Track
+
+model Track {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  endedAt     DateTime?
+  distance    Decimal?
+  weather     String?
+  description String?
+  coordinates Coordinate[]
+
+  prismaOriginalTrack OriginalTrack[]
+  prismaDogTrack      DogTrack[]
+}
+
+enum CoordinateType {
+  BLOOD_AND_HOOF
+  HOOF
+  DOG
+}
+
+model Coordinate {
+  id        Int            @id @default(autoincrement())
+  lat       Decimal
+  long      Decimal
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  type      CoordinateType
+  trackId   Int
+  track     Track          @relation(fields: [trackId], references: [id], onDelete: Cascade)
+}
+
+// Original track
+model OriginalTrack {
+  id              Int         @id @default(autoincrement())
+  createdByUserId String      @db.Uuid
+  createdByUser   UserProfile @relation(fields: [createdByUserId], references: [userId], onDelete: Cascade)
+  trackId         Int
+  track           Track       @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  dogTracks       DogTrack[]
+}
+
+// Dog track
+model DogTrack {
+  id              Int           @id @default(autoincrement())
+  trackId         Int
+  track           Track         @relation(fields: [trackId], references: [id], onDelete: Cascade)
+  originalTrackId Int
+  originalTrack   OriginalTrack @relation(fields: [originalTrackId], references: [id], onDelete: Cascade)
+  dogId           Int
+  dog             Dog           @relation(fields: [dogId], references: [id], onDelete: Cascade)
+  createdByUserId String        @db.Uuid
+  createdByUser   UserProfile   @relation(fields: [createdByUserId], references: [userId], onDelete: Cascade)
+}
