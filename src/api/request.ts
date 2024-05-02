@@ -32,8 +32,6 @@ export const handleRequest = async <T extends AnyZodObject>({
     inputSchema.parseAsync({ ...req.params, ...req.body }),
   );
 
-  console.log(req.body)
-
   if (validationError) {
     return res
       .status(400)

@@ -46,7 +46,7 @@ export class DogTrackService {
     });
 
     if (!dogTrack) {
-      throw new NotFoundError("Original track not found");
+      throw new NotFoundError("Dog track not found");
     }
 
     if (dogTrack.endedAt) {
